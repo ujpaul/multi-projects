@@ -22,6 +22,8 @@ const Signin = () => {
       headers: { "Content-Type": "text/plain" },
     });
     console.log(response);
+    setPassword("");
+    setUsername("");
     if (res) {
       res.data === "admin"
         ? navigate("/admin")
@@ -29,11 +31,12 @@ const Signin = () => {
         ? navigate("/patient")
         : res.data === "physician"
         ? navigate("/physician")
-        : res.data === "pharmacist"
+        : res.data === "Pharmacist"
         ? navigate("/pharmacist")
         : navigate("/login");
     }
   };
+
   return (
     <div className="container">
       <div className="form_container">
