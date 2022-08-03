@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Styles.css";
 
@@ -13,6 +14,9 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error,setError] = useState("");
+  const [showError, setShowError] = useState(false);
+  const navigate = useNavigate();
   const dataToSend = {
     fname: fname,
     lname: lname,
@@ -24,28 +28,31 @@ const Signup = () => {
     userPassword: password,
     confirmPassword: confirmPassword,
   };
-  const signupHandler = (e) => {
+  const signupHandler = async (e) => {
     e.preventDefault();
-
-    const response = axios({
+    setShowError(false)
+    if(typeof password !== Number || typeof confirmPassword !== Number){
+      setError("Password should be numbers");
+      setShowError(true)
+    }
+    const response = await axios({
       method: "POST",
-      url: "http://192.168.1.65:8080/java-challenge/Signup",
+      url: "http://localhost:8080/java-challenge/Signup",
       data: JSON.stringify(dataToSend),
       headers: { "Content-Type": "text/plain" },
     });
-    console.log(response);
-
-    // axios({
-    // method: 'post',
-    // url: "http://localhost:8080/java-challenge/Signup",
-    // data: dataToSend,
-    // headers:{'Content-Type': 'plain/text'}
-    // }).then(result => console.log(result)).catch(err=> console.log(err))
+    if (response.status === 200) {
+      navigate("/login");
+    }else{
+      setError(response.data);
+      showError(true)
+    }
   };
 
   return (
     <div className="container">
       <form>
+        {showError ? <span style={{color: 'red'}}>{error}</span> : <></>}
         <div className="grid-col-2">
           <span>
             {" "}

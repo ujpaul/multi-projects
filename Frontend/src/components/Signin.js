@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import "./Styles.css";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error,setError] = useState("");
+  const [showError, setShowError] = useState(false);
   const navigate = useNavigate();
   const response = "Admin";
   const submitHandler = async (e) => {
@@ -24,6 +28,12 @@ const Signin = () => {
     console.log(response);
     setPassword("");
     setUsername("");
+    if(res.data === "Incorrect Username or Password") {
+      setError(res.data)
+      setShowError(true);
+      setUsername("")
+      setPassword("")
+    }
     if (res) {
       res.data === "admin"
         ? navigate("/admin")
@@ -34,11 +44,12 @@ const Signin = () => {
         : res.data === "Pharmacist"
         ? navigate("/pharmacist")
         : navigate("/login");
-    }
+    } 
   };
 
   return (
     <div className="container">
+      {showError ? <span style={{color: 'red', fontSize: 20}}>{error}</span>: <></>}
       <div className="form_container">
         <div className="title">
           <h2>Login Form</h2>

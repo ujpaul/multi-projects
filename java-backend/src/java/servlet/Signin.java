@@ -82,7 +82,9 @@ public class Signin extends HttpServlet {
          LinkedHashMap<Integer, UserData> hashMap = new LinkedHashMap<Integer, UserData>();
 
           String jsonString = req.getReader().lines().collect(Collectors.joining());                            
-          UserData fieldData = new Gson().fromJson(jsonString, UserData.class);         
+          UserData myObject = new Gson().fromJson(jsonString, UserData.class);         
+           
+        System.out.println("username==>"+ myObject.getUsername()+ "password==>"+myObject.getUserPassword());
            hashMap = DataStructure.getInstance().getData(); 
            
             ArrayList<UserData> users = new ArrayList<>();           
@@ -94,7 +96,7 @@ public class Signin extends HttpServlet {
            System.out.println(users.size());
            boolean userFound = false;
            for(UserData user: users){
-               if(user.getUsername().equals(fieldData.getUsername()) && user.getUserPassword() == fieldData.getUserPassword()){
+               if(user.getUsername().equals(myObject.getUsername()) && user.getUserPassword() == myObject.getUserPassword()){
                    out.print(user.getUserType()); 
                     userFound = true;
 
