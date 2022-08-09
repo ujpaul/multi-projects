@@ -7,6 +7,7 @@ import Admin from "./components/Admin";
 import Pharmacist from "./components/Pharmacist";
 import Physician from "./components/Physician";
 import Patient from "./components/Patient";
+import Check from "./components/Check";
 function App() {
   return (
     <div className="App">
@@ -18,6 +19,7 @@ function App() {
         <Route path="/patient" element={<Patient />} />
         <Route path="/physician" element={<Physician />} />
         <Route path="/pharmacist" element={<Pharmacist />} />
+        <Route path="/check" element={<Check />} />
       </Routes>
     </div>
   );

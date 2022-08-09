@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -28,30 +28,56 @@ const Signup = () => {
     userPassword: password,
     confirmPassword: confirmPassword,
   };
+  let formRef = useRef();
+  useEffect(() => {
+    if (showError) {
+      formRef.current?.reset();
+    }
+  }, [showError]);
   const signupHandler = async (e) => {
     e.preventDefault();
     setShowError(false)
-    if(typeof password !== Number || typeof confirmPassword !== Number){
-      setError("Password should be numbers");
+    
+    if(userType === "admin" && password.length !== 8){
+      setError("Password should be 8 numbers for this user");
+      setShowError(true);
+    }else if(userType === "patient" && password.length !== 7){
+      setError("Password should be 7 numbers for this user");
+      setShowError(true);
+    }else if(userType === "physician" && password.length !== 6){
+      setError("Password should be 6 numbers for this user");
+      setShowError(true);
+    }else if(userType === "pharmacist" && password.length !== 5){
+      setError("Password should be 5 numbers for this user");
+      setShowError(true);
+    }else if(password !== confirmPassword){
+      setError("Password not match");
       setShowError(true)
     }
-    const response = await axios({
-      method: "POST",
-      url: "http://localhost:8080/java-challenge/Signup",
-      data: JSON.stringify(dataToSend),
-      headers: { "Content-Type": "text/plain" },
-    });
-    if (response.status === 200) {
-      navigate("/login");
-    }else{
-      setError(response.data);
-      showError(true)
+    // else if(typeof password != Number || typeof confirmPassword != Number){
+    //   setError("Password should be numbers");
+    //   setShowError(true)
+    // }
+    else {
+      const response = await axios({
+        method: "POST",
+        url: "http://localhost:8080/java-challenge/Signup",
+        data: JSON.stringify(dataToSend),
+        headers: { "Content-Type": "text/plain" },
+      });
+      if (response.status === 200) {
+        navigate("/login");
+      }else{
+        setError(response.data);
+        showError(true)
+      }
     }
+    
   };
 
   return (
     <div className="container">
-      <form>
+      <form ref={formRef}>
         {showError ? <span style={{color: 'red'}}>{error}</span> : <></>}
         <div className="grid-col-2">
           <span>
@@ -65,6 +91,7 @@ const Signup = () => {
             required
             placeholder="First Name"
             onChange={(e) => setFname(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
         <div className="grid-col-2">
@@ -79,6 +106,7 @@ const Signup = () => {
             required
             placeholder="Last Name"
             onChange={(e) => setLname(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
         <div className="grid-col-2">
@@ -91,6 +119,7 @@ const Signup = () => {
             placeholder="phone Number"
             name="phoneNumber"
             onChange={(e) => setPhoneNumber(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
         <div className="grid-col-2">
@@ -104,6 +133,7 @@ const Signup = () => {
             name="age"
             required
             onChange={(e) => setAge(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
         <div className="grid-col-2">
@@ -116,6 +146,7 @@ const Signup = () => {
             placeholder="Username"
             name="username"
             onChange={(e) => setUsername(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
 
@@ -130,6 +161,7 @@ const Signup = () => {
             placeholder="password"
             name="user_password"
             onChange={(e) => setPassword(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
 
@@ -144,6 +176,7 @@ const Signup = () => {
             id="conf_password"
             placeholder="Confirm Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />
         </div>
         <div className="input-container mt">
@@ -154,6 +187,7 @@ const Signup = () => {
             value="male"
             id="male"
             onChange={(e) => setGender(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />{" "}
           <label for="male">Male</label>
           <input
@@ -163,6 +197,7 @@ const Signup = () => {
             value="female"
             id="female"
             onChange={(e) => setGender(e.target.value)}
+            onKeyUp={()=>setShowError(false)}
           />{" "}
           <label for="female">Female</label>
         </div>
@@ -173,6 +208,7 @@ const Signup = () => {
             onChange={(e) => {
               console.log(e.target.value);
               setUserType(e.target.value);
+              setShowError(false);
             }}
           >
             <option>Select User Role</option>

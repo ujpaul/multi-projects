@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
  * @author Paul
  */
 public class DataStructure {
-    private LinkedHashMap<Integer, UserData> lhmData = new LinkedHashMap<Integer, UserData>();
+    private LinkedHashMap<Integer, UserData> hashMap = new LinkedHashMap<Integer, UserData>();
 	private static final DataStructure instance = new DataStructure();
 	private DataStructure() {
 		
@@ -20,7 +20,7 @@ public class DataStructure {
 		return instance;
 	}
 	public LinkedHashMap<Integer, UserData> getData() {
-		return lhmData;
+		return hashMap;
 	}
     
 }

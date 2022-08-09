@@ -75,16 +75,14 @@ public class Signin extends HttpServlet {
             throws ServletException, IOException {
         processRequest(req, response);
         response.addHeader("Access-Control-Allow-Origin", "*");
-        PrintWriter out;
-        out = response.getWriter();
+        PrintWriter apiResponse;
+        apiResponse = response.getWriter();
         
-         UserData ud = new UserData();
+//         UserData ud = new UserData();
          LinkedHashMap<Integer, UserData> hashMap = new LinkedHashMap<Integer, UserData>();
 
           String jsonString = req.getReader().lines().collect(Collectors.joining());                            
-          UserData myObject = new Gson().fromJson(jsonString, UserData.class);         
-           
-        System.out.println("username==>"+ myObject.getUsername()+ "password==>"+myObject.getUserPassword());
+          UserData fieldData = new Gson().fromJson(jsonString, UserData.class);         
            hashMap = DataStructure.getInstance().getData(); 
            
             ArrayList<UserData> users = new ArrayList<>();           
@@ -93,19 +91,16 @@ public class Signin extends HttpServlet {
                UserData userdata = entry.getValue();
                users.add(userdata);           
 		}
-           System.out.println(users.size());
-           boolean userFound = false;
+           boolean isUserExist = false;
            for(UserData user: users){
-               if(user.getUsername().equals(myObject.getUsername()) && user.getUserPassword() == myObject.getUserPassword()){
-                   out.print(user.getUserType()); 
-                    userFound = true;
-
+               if(user.getUsername().equals(fieldData.getUsername()) && user.getUserPassword() == fieldData.getUserPassword()){
+                   apiResponse.print(user.getUserType()); 
+                    isUserExist = true;
                } 
            }
-           if(userFound == false){
-               out.print("Incorrect Username or Password");
+           if(isUserExist == false){
+               apiResponse.print("Incorrect Username or Password");
            }
-
 	}
 
     /**

@@ -15,8 +15,7 @@ public abstract class User {
     private static String userType;
    public  String login(String password , String username){return null;}
    
-    public LinkedHashMap<Integer, UserData> signup( UserData user){ return null;}; 
-    
+    public LinkedHashMap<Integer, UserData> signup( UserData user){ return null;};     
     public static void setUserType(String userType){
         User.userType = userType;
      }
